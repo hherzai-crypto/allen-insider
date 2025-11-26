@@ -106,6 +106,264 @@ export async function scrapeAllenParksEvents(): Promise<ScrapedEvent[]> {
 }
 
 /**
+ * Scrape events from Visit Allen - Official Tourism Site
+ * Weight: 10/10 (Official, Comprehensive, Trusted)
+ */
+export async function scrapeVisitAllenEvents(): Promise<ScrapedEvent[]> {
+  try {
+    const response = await axios.get('https://www.visitallen.com/events/', {
+      timeout: 10000,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+
+    const $ = cheerio.load(response.data);
+    const events: ScrapedEvent[] = [];
+
+    // Parse Visit Allen event listings
+    $('.event-item, .event-card, article[class*="event"]').each((_, element) => {
+      const title = $(element).find('h2, h3, .event-title, .title').first().text().trim();
+      const description = $(element).find('.event-description, .description, p').first().text().trim();
+      const dateStr = $(element).find('.event-date, .date, time').first().text().trim();
+      const time = $(element).find('.event-time, .time').text().trim();
+      const location = $(element).find('.event-location, .location, .venue').text().trim();
+      const address = $(element).find('.event-address, .address').text().trim();
+      const cost = $(element).find('.event-price, .price, .cost').text().trim();
+      const imageUrl = $(element).find('img').first().attr('src');
+      const eventUrl = $(element).find('a').first().attr('href');
+
+      if (title && title.length > 3) {
+        events.push({
+          title,
+          description: description || title,
+          date: parseDate(dateStr) || getUpcomingWeekend(),
+          time: time || undefined,
+          location: location || 'Allen, TX',
+          address: address || undefined,
+          source: 'Visit Allen',
+          source_url: eventUrl ? `https://www.visitallen.com${eventUrl}` : 'https://www.visitallen.com/events/',
+          cost: cost || 'See website',
+          category: categorizeEvent(title),
+          image_url: imageUrl ? `https://www.visitallen.com${imageUrl}` : undefined,
+          featured: true,
+          score: 9
+        });
+      }
+    });
+
+    return events.slice(0, 15);
+  } catch (error) {
+    console.error('Error scraping Visit Allen:', error);
+    return [];
+  }
+}
+
+/**
+ * Scrape events from Watters Creek - Major Entertainment Venue
+ * Weight: 9/10 (Live music, dining, shopping events)
+ */
+export async function scrapeWattersCreekEvents(): Promise<ScrapedEvent[]> {
+  try {
+    const response = await axios.get('https://www.watterscreek.com/events', {
+      timeout: 10000,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+
+    const $ = cheerio.load(response.data);
+    const events: ScrapedEvent[] = [];
+
+    $('.event, .event-item, article').each((_, element) => {
+      const title = $(element).find('h2, h3, .event-title').first().text().trim();
+      const description = $(element).find('.event-description, .description, p').first().text().trim();
+      const dateStr = $(element).find('.event-date, .date, time').text().trim();
+      const time = $(element).find('.event-time, .time').text().trim();
+      const imageUrl = $(element).find('img').first().attr('src');
+      const eventUrl = $(element).find('a').first().attr('href');
+
+      if (title && title.length > 3) {
+        events.push({
+          title,
+          description: description || title,
+          date: parseDate(dateStr) || getUpcomingWeekend(),
+          time: time || undefined,
+          location: 'Watters Creek',
+          address: '970 Garden Park Dr, Allen, TX 75013',
+          source: 'Watters Creek',
+          source_url: eventUrl ? `https://www.watterscreek.com${eventUrl}` : 'https://www.watterscreek.com/events',
+          category: categorizeEvent(title),
+          image_url: imageUrl || undefined,
+          featured: true,
+          score: 9
+        });
+      }
+    });
+
+    return events;
+  } catch (error) {
+    console.error('Error scraping Watters Creek:', error);
+    return [];
+  }
+}
+
+/**
+ * Scrape events from Allen Event Center
+ * Weight: 8/10 (Concerts, trade shows, sports)
+ */
+export async function scrapeAllenEventCenter(): Promise<ScrapedEvent[]> {
+  try {
+    const response = await axios.get('https://www.alleneventcenter.com/events', {
+      timeout: 10000,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+
+    const $ = cheerio.load(response.data);
+    const events: ScrapedEvent[] = [];
+
+    $('.event, .event-card, article').each((_, element) => {
+      const title = $(element).find('h2, h3, .event-title, .title').first().text().trim();
+      const description = $(element).find('.event-description, .description, p').first().text().trim();
+      const dateStr = $(element).find('.event-date, .date, time').text().trim();
+      const time = $(element).find('.event-time, .time').text().trim();
+      const cost = $(element).find('.price, .cost').text().trim();
+      const imageUrl = $(element).find('img').first().attr('src');
+      const eventUrl = $(element).find('a').first().attr('href');
+
+      if (title && title.length > 3) {
+        events.push({
+          title,
+          description: description || title,
+          date: parseDate(dateStr) || getUpcomingWeekend(),
+          time: time || undefined,
+          location: 'Allen Event Center',
+          address: '200 E Stacy Rd, Allen, TX 75002',
+          source: 'Allen Event Center',
+          source_url: eventUrl || 'https://www.alleneventcenter.com/events',
+          cost: cost || 'See website',
+          category: categorizeEvent(title),
+          image_url: imageUrl || undefined,
+          featured: true,
+          score: 8
+        });
+      }
+    });
+
+    return events;
+  } catch (error) {
+    console.error('Error scraping Allen Event Center:', error);
+    return [];
+  }
+}
+
+/**
+ * Scrape events from Allen Premium Outlets
+ * Weight: 7/10 (Shopping events, seasonal activities)
+ */
+export async function scrapeAllenPremiumOutlets(): Promise<ScrapedEvent[]> {
+  try {
+    const response = await axios.get('https://www.premiumoutlets.com/outlet/dallas-allen/events', {
+      timeout: 10000,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+
+    const $ = cheerio.load(response.data);
+    const events: ScrapedEvent[] = [];
+
+    $('.event, .event-card, article').each((_, element) => {
+      const title = $(element).find('h2, h3, .event-title').first().text().trim();
+      const description = $(element).find('.event-description, .description, p').first().text().trim();
+      const dateStr = $(element).find('.event-date, .date, time').text().trim();
+      const time = $(element).find('.event-time, .time').text().trim();
+      const imageUrl = $(element).find('img').first().attr('src');
+
+      if (title && title.length > 3) {
+        events.push({
+          title,
+          description: description || title,
+          date: parseDate(dateStr) || getUpcomingWeekend(),
+          time: time || undefined,
+          location: 'Allen Premium Outlets',
+          address: '820 W Stacy Rd, Allen, TX 75013',
+          source: 'Allen Premium Outlets',
+          source_url: 'https://www.premiumoutlets.com/outlet/dallas-allen/events',
+          category: 'Shopping',
+          image_url: imageUrl || undefined,
+          score: 7
+        });
+      }
+    });
+
+    return events;
+  } catch (error) {
+    console.error('Error scraping Allen Premium Outlets:', error);
+    return [];
+  }
+}
+
+/**
+ * Scrape events from Allen ISD Calendar
+ * Weight: 9/10 (School events - huge for families)
+ */
+export async function scrapeAllenISDEvents(): Promise<ScrapedEvent[]> {
+  try {
+    const response = await axios.get('https://www.allenisd.org/calendar', {
+      timeout: 10000,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+
+    const $ = cheerio.load(response.data);
+    const events: ScrapedEvent[] = [];
+
+    $('.event, .calendar-event, article').each((_, element) => {
+      const title = $(element).find('h2, h3, .event-title, .title').first().text().trim();
+      const description = $(element).find('.event-description, .description, p').first().text().trim();
+      const dateStr = $(element).find('.event-date, .date, time').text().trim();
+      const time = $(element).find('.event-time, .time').text().trim();
+      const location = $(element).find('.event-location, .location').text().trim();
+      const eventUrl = $(element).find('a').first().attr('href');
+
+      if (title && title.length > 3) {
+        // Determine category based on title keywords
+        let category = 'Family';
+        if (title.toLowerCase().includes('sport') || title.toLowerCase().includes('game') ||
+            title.toLowerCase().includes('basketball') || title.toLowerCase().includes('football')) {
+          category = 'Sports';
+        } else if (title.toLowerCase().includes('art') || title.toLowerCase().includes('music') ||
+                   title.toLowerCase().includes('theater') || title.toLowerCase().includes('concert')) {
+          category = 'Arts';
+        }
+
+        events.push({
+          title,
+          description: description || title,
+          date: parseDate(dateStr) || getUpcomingWeekend(),
+          time: time || undefined,
+          location: location || 'Allen ISD',
+          source: 'Allen ISD',
+          source_url: eventUrl ? `https://www.allenisd.org${eventUrl}` : 'https://www.allenisd.org/calendar',
+          category: category,
+          cost: 'Free',
+          score: 8
+        });
+      }
+    });
+
+    return events.slice(0, 10);
+  } catch (error) {
+    console.error('Error scraping Allen ISD:', error);
+    return [];
+  }
+}
+
+/**
  * Scrape events from Eventbrite for Allen, TX
  * Uses Eventbrite Discovery API (public, no auth needed)
  */
@@ -342,14 +600,25 @@ export async function generateCommunityEvents(): Promise<ScrapedEvent[]> {
 
 /**
  * Master scraper that combines all sources
+ * Prioritized by tier: Tier 1 (weight 10-9) → Tier 2 (weight 8-7) → Community events
  */
 export async function scrapeAllEvents(): Promise<ScrapedEvent[]> {
-  console.log('Starting event scraping...');
+  console.log('Starting event scraping from multiple sources...');
 
   const results = await Promise.allSettled([
-    scrapeCityOfAllenEvents(),
-    scrapeAllenParksEvents(),
-    scrapeEventbriteEvents(),
+    // Tier 1: Official & High-Priority Sources
+    scrapeVisitAllenEvents(),         // Weight 10 - Official tourism site
+    scrapeWattersCreekEvents(),       // Weight 9 - Major venue
+    scrapeAllenISDEvents(),           // Weight 9 - School events (family focus)
+    scrapeAllenEventCenter(),         // Weight 8 - Concerts, trade shows
+    scrapeEventbriteEvents(),         // Weight 8 - Comprehensive event platform
+
+    // Tier 2: Additional Sources
+    scrapeCityOfAllenEvents(),        // Weight 7 - City calendar
+    scrapeAllenParksEvents(),         // Weight 7 - Parks & Recreation
+    scrapeAllenPremiumOutlets(),      // Weight 7 - Shopping events
+
+    // Community/Generated Events (fallback)
     generateCommunityEvents()
   ]);
 
