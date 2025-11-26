@@ -953,6 +953,153 @@ export async function generateCommunityEvents(): Promise<ScrapedEvent[]> {
     score: 7
   });
 
+  // Thursday evening events
+  const thursday = getNextDayOfWeek(4);
+
+  // Trivia night
+  events.push({
+    title: 'Trivia Night at BJ\'s Restaurant',
+    description: 'Weekly trivia competition with prizes. Gather your team for a night of fun questions and great food!',
+    date: formatDate(thursday),
+    time: '7:00 PM - 9:00 PM',
+    location: 'BJ\'s Restaurant & Brewhouse',
+    address: '190 E Stacy Rd, Allen, TX 75002',
+    category: 'Entertainment',
+    source: 'Community Events',
+    cost: 'Free to play',
+    score: 6
+  });
+
+  // Library events
+  const monday = getNextDayOfWeek(1);
+  events.push({
+    title: 'Story Time at Allen Library',
+    description: 'Interactive story time for toddlers and preschoolers with songs, crafts, and fun activities.',
+    date: formatDate(monday),
+    time: '10:30 AM - 11:15 AM',
+    location: 'Allen Public Library',
+    address: '300 N Allen Dr, Allen, TX 75013',
+    category: 'Family',
+    source: 'Allen Library',
+    cost: 'Free',
+    score: 7
+  });
+
+  // Tuesday fitness
+  const tuesday = getNextDayOfWeek(2);
+  events.push({
+    title: 'Zumba in the Park',
+    description: 'High-energy Zumba class in the park. No experience needed, just bring water and comfortable shoes!',
+    date: formatDate(tuesday),
+    time: '6:00 PM - 7:00 PM',
+    location: 'Allen Station Park',
+    address: '300 E Main St, Allen, TX 75002',
+    category: 'Fitness',
+    source: 'Allen Parks',
+    cost: 'Free',
+    score: 7
+  });
+
+  // Wednesday market
+  const wednesday = getNextDayOfWeek(3);
+  events.push({
+    title: 'Midweek Market at Watters Creek',
+    description: 'Local artisans, crafters, and food vendors. Perfect for lunch break shopping and browsing.',
+    date: formatDate(wednesday),
+    time: '11:00 AM - 2:00 PM',
+    location: 'Watters Creek',
+    address: '970 Garden Park Dr, Allen, TX 75013',
+    category: 'Shopping',
+    source: 'Watters Creek',
+    cost: 'Free admission',
+    score: 7
+  });
+
+  // Saturday morning run club
+  events.push({
+    title: 'Allen Run Club',
+    description: 'Weekly community run for all paces. 3-mile and 5-mile route options. Coffee provided after!',
+    date: formatDate(saturday),
+    time: '7:00 AM - 8:00 AM',
+    location: 'Celebration Park',
+    address: '701 Angel Pkwy, Allen, TX 75013',
+    category: 'Fitness',
+    source: 'Community Events',
+    cost: 'Free',
+    score: 6
+  });
+
+  // Sunday brunch event
+  events.push({
+    title: 'Jazz Brunch at Heritage Farmstead',
+    description: 'Live jazz music while you enjoy Sunday brunch in a historic setting. Reservations recommended.',
+    date: formatDate(sunday),
+    time: '10:00 AM - 1:00 PM',
+    location: 'Heritage Farmstead Museum',
+    address: '1900 W McDermott Dr, Allen, TX 75013',
+    category: 'Music',
+    source: 'Heritage Farmstead',
+    cost: '$25 per person',
+    score: 8
+  });
+
+  // Saturday art class
+  events.push({
+    title: 'Adult Painting Class',
+    description: 'Paint and sip class for adults. All materials included, no experience necessary. Wine available for purchase.',
+    date: formatDate(saturday),
+    time: '6:00 PM - 8:00 PM',
+    location: 'Painting with a Twist Allen',
+    address: '821 W McDermott Dr Suite 110, Allen, TX 75013',
+    category: 'Arts',
+    source: 'Community Events',
+    cost: '$35 per person',
+    score: 7
+  });
+
+  // Friday comedy night
+  events.push({
+    title: 'Comedy Night at The Yard',
+    description: 'Stand-up comedy showcase featuring local comedians. 21+ event with full bar.',
+    date: formatDate(friday),
+    time: '8:00 PM - 10:00 PM',
+    location: 'The Yard Allen',
+    address: '107 N Greenville Ave, Allen, TX 75002',
+    category: 'Entertainment',
+    source: 'The Yard',
+    cost: '$10 at door',
+    score: 7
+  });
+
+  // Saturday shopping event
+  events.push({
+    title: 'Sidewalk Sale at Allen Premium Outlets',
+    description: 'Extra discounts and special deals throughout the outlets. Perfect day for bargain hunting!',
+    date: formatDate(saturday),
+    time: '10:00 AM - 8:00 PM',
+    location: 'Allen Premium Outlets',
+    address: '820 W Stacy Rd, Allen, TX 75013',
+    category: 'Shopping',
+    source: 'Allen Premium Outlets',
+    cost: 'Free admission',
+    score: 8
+  });
+
+  // Sunday family event
+  events.push({
+    title: 'Family Movie in the Park',
+    description: 'Bring blankets and lawn chairs for a family-friendly movie under the stars. Concessions available.',
+    date: formatDate(sunday),
+    time: '7:30 PM - 10:00 PM',
+    location: 'Allen Community Park',
+    address: '700 Jupiter Rd, Allen, TX 75002',
+    category: 'Family',
+    source: 'Allen Parks',
+    cost: 'Free',
+    featured: true,
+    score: 9
+  });
+
   return events;
 }
 
