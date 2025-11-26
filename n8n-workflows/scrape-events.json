@@ -1,0 +1,109 @@
+{
+  "name": "Allen Events Scraper",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 6 * * *"
+            }
+          ]
+        }
+      },
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://visitallen.com/events",
+        "options": {}
+      },
+      "name": "Visit Allen Scraper",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [450, 200]
+    },
+    {
+      "parameters": {
+        "url": "https://cityofallen.org/calendar",
+        "options": {}
+      },
+      "name": "City Calendar Scraper",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [450, 350]
+    },
+    {
+      "parameters": {
+        "url": "https://watterscreek.com/events",
+        "options": {}
+      },
+      "name": "Watters Creek Scraper",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [450, 500]
+    },
+    {
+      "parameters": {
+        "functionCode": "const normalizedEvents = [];\n\nfor (const item of items) {\n  const normalized = {\n    title: item.json.title || '',\n    description: item.json.description || '',\n    date: item.json.date || '',\n    time: item.json.time || null,\n    location: item.json.location || '',\n    category: item.json.category || 'Entertainment',\n    source: item.json.source || '',\n    source_url: item.json.url || '',\n    cost: item.json.cost || 'Free',\n    score: 7\n  };\n  \n  normalizedEvents.push({ json: normalized });\n}\n\nreturn normalizedEvents;"
+      },
+      "name": "Normalize Data",
+      "type": "n8n-nodes-base.function",
+      "position": [650, 350]
+    },
+    {
+      "parameters": {
+        "functionCode": "const seen = new Set();\nconst unique = [];\n\nfor (const item of items) {\n  const key = `${item.json.title}-${item.json.date}`;\n  if (!seen.has(key)) {\n    seen.add(key);\n    unique.push(item);\n  }\n}\n\nreturn unique;"
+      },
+      "name": "Deduplicate",
+      "type": "n8n-nodes-base.function",
+      "position": [850, 350]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://allen-insider.com/api/webhooks/n8n",
+        "authentication": "headerAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "=",
+              "value": "={{$json}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "name": "Send to API",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1050, 350]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          { "node": "Visit Allen Scraper", "type": "main", "index": 0 },
+          { "node": "City Calendar Scraper", "type": "main", "index": 0 },
+          { "node": "Watters Creek Scraper", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Visit Allen Scraper": {
+      "main": [[{ "node": "Normalize Data", "type": "main", "index": 0 }]]
+    },
+    "City Calendar Scraper": {
+      "main": [[{ "node": "Normalize Data", "type": "main", "index": 0 }]]
+    },
+    "Watters Creek Scraper": {
+      "main": [[{ "node": "Normalize Data", "type": "main", "index": 0 }]]
+    },
+    "Normalize Data": {
+      "main": [[{ "node": "Deduplicate", "type": "main", "index": 0 }]]
+    },
+    "Deduplicate": {
+      "main": [[{ "node": "Send to API", "type": "main", "index": 0 }]]
+    }
+  }
+}

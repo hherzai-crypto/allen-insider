@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Allen Insider Newsletter</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', Arial, sans-serif;
+      background-color: #F8F8F6;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #FFFFFF;
+    }
+    .header {
+      background: linear-gradient(135deg, #006B6B 0%, #008B8B 100%);
+      padding: 24px;
+      text-align: center;
+    }
+    .header h1 {
+      color: #FFFFFF;
+      margin: 0;
+      font-size: 28px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+    }
+    .header p {
+      color: #D4AF37;
+      margin: 8px 0 0 0;
+      font-size: 14px;
+    }
+    .content {
+      padding: 32px 24px;
+    }
+    .greeting {
+      color: #2D2D2D;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .event {
+      border-left: 4px solid #D4AF37;
+      padding-left: 16px;
+      margin: 20px 0;
+    }
+    .event h3 {
+      color: #006B6B;
+      margin: 0 0 8px 0;
+      font-size: 18px;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .event-meta {
+      color: #6B6B6B;
+      margin: 4px 0;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .event p {
+      color: #2D2D2D;
+      margin: 8px 0;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+    .event a {
+      color: #006B6B;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .hidden-gems {
+      background: #F8F8F6;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 24px 0;
+    }
+    .hidden-gems h2 {
+      color: #006B6B;
+      font-size: 18px;
+      margin: 0 0 16px 0;
+      font-family: 'Montserrat', sans-serif;
+    }
+    .closing {
+      color: #2D2D2D;
+      font-size: 16px;
+      line-height: 1.6;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid #E5E5E5;
+    }
+    .signature {
+      margin-top: 16px;
+    }
+    .signature strong {
+      color: #006B6B;
+    }
+    .footer {
+      background: #2D2D2D;
+      padding: 24px;
+      text-align: center;
+    }
+    .footer p {
+      color: #6B6B6B;
+      margin: 0;
+      font-size: 12px;
+    }
+    .footer a {
+      color: #D4AF37;
+      text-decoration: none;
+    }
+    .cta-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #006B6B 0%, #008B8B 100%);
+      color: #FFFFFF !important;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      margin: 16px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>ALLEN INSIDER</h1>
+      <p>Your Weekly Guide to Allen, TX</p>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      {{NEWSLETTER_CONTENT}}
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>© 2026 Allen Insider • Made in Allen, TX</p>
+      <p style="margin-top: 8px;">
+        <a href="{{UNSUBSCRIBE_URL}}">Unsubscribe</a> |
+        <a href="https://allen-insider.com">View Online</a>
+      </p>
+      <p style="margin-top: 16px; color: #D4AF37;">
+        A community project by 4Ever Young
+      </p>
+    </div>
+  </div>
+</body>
+</html>
