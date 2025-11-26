@@ -4,123 +4,146 @@ import { useState, useEffect } from 'react';
 import { Event } from '@/lib/types';
 import { EventCard } from './EventCard';
 
-// Mock events for demo/fallback (will be replaced by real data when backend is configured)
-const MOCK_EVENTS: Event[] = [
-  {
-    id: '1',
-    title: 'Allen Farmers Market',
-    description: 'Fresh produce, local vendors, live music, and family fun every Saturday morning.',
-    date: '2025-01-25',
-    time: '8:00 AM - 12:00 PM',
-    end_date: null,
-    location: 'Watters Creek',
-    address: '970 Garden Park Dr, Allen, TX',
-    category: 'Food',
-    source: 'Visit Allen',
-    source_url: 'https://visitallen.com',
-    image_url: null,
-    cost: 'Free',
-    score: 9,
-    featured: true,
-    created_at: new Date().toISOString(),
-    scraped_at: new Date().toISOString(),
-  },
-  {
-    id: '2',
-    title: 'Live Music at The Yard',
-    description: 'Enjoy live local bands every Friday night on the outdoor stage.',
-    date: '2025-01-24',
-    time: '7:00 PM - 10:00 PM',
-    end_date: null,
-    location: 'The Yard',
-    address: '107 N Greenville Ave, Allen, TX',
-    category: 'Music',
-    source: 'City of Allen',
-    source_url: null,
-    image_url: null,
-    cost: 'Free',
-    score: 8,
-    featured: true,
-    created_at: new Date().toISOString(),
-    scraped_at: new Date().toISOString(),
-  },
-  {
-    id: '3',
-    title: 'Kids Art Workshop',
-    description: 'Creative painting session for children ages 5-12. All materials provided.',
-    date: '2025-01-26',
-    time: '2:00 PM - 4:00 PM',
-    end_date: null,
-    location: 'Allen Arts Alliance',
-    address: '301 Century Pkwy, Allen, TX',
-    category: 'Family',
-    source: 'Allen Arts',
-    source_url: null,
-    image_url: null,
-    cost: '$15 per child',
-    score: 8,
-    featured: false,
-    created_at: new Date().toISOString(),
-    scraped_at: new Date().toISOString(),
-  },
-  {
-    id: '4',
-    title: 'Allen Eagles Basketball',
-    description: 'Cheer on the Allen Eagles in this exciting home game.',
-    date: '2025-01-25',
-    time: '7:00 PM',
-    end_date: null,
-    location: 'Allen High School',
-    address: '300 Rivercrest Blvd, Allen, TX',
-    category: 'Sports',
-    source: 'Allen ISD',
-    source_url: null,
-    image_url: null,
-    cost: '$8 adults, $5 students',
-    score: 7,
-    featured: false,
-    created_at: new Date().toISOString(),
-    scraped_at: new Date().toISOString(),
-  },
-  {
-    id: '5',
-    title: 'Food Truck Friday',
-    description: 'Over 15 food trucks featuring diverse cuisines.',
-    date: '2025-01-24',
-    time: '5:00 PM - 9:00 PM',
-    end_date: null,
-    location: 'Celebration Park',
-    address: '701 Angel Pkwy, Allen, TX',
-    category: 'Food',
-    source: 'Visit Allen',
-    source_url: null,
-    image_url: null,
-    cost: 'Free entry',
-    score: 9,
-    featured: true,
-    created_at: new Date().toISOString(),
-    scraped_at: new Date().toISOString(),
-  },
-  {
-    id: '6',
-    title: 'Yoga in the Park',
-    description: 'Free outdoor yoga session for all levels. Bring your own mat.',
-    date: '2025-01-26',
-    time: '9:00 AM - 10:00 AM',
-    end_date: null,
-    location: 'Bethany Lakes Park',
-    address: '701 S Greenville Ave, Allen, TX',
-    category: 'Fitness',
-    source: 'Allen Parks',
-    source_url: null,
-    image_url: null,
-    cost: 'Free',
-    score: 7,
-    featured: false,
-    created_at: new Date().toISOString(),
-    scraped_at: new Date().toISOString(),
-  },
-];
+// Helper function to get next occurrence of a day of week (0=Sunday, 6=Saturday)
+function getNextDayOfWeek(dayOfWeek: number): Date {
+  const today = new Date();
+  const currentDay = today.getDay();
+  const daysUntilTarget = (dayOfWeek + 7 - currentDay) % 7 || 7;
+  const targetDate = new Date(today);
+  targetDate.setDate(today.getDate() + daysUntilTarget);
+  return targetDate;
+}
+
+// Helper to format date as YYYY-MM-DD
+function formatDate(date: Date): string {
+  return date.toISOString().split('T')[0];
+}
+
+// Generate mock events with dynamic dates
+function generateMockEvents(): Event[] {
+  const friday = getNextDayOfWeek(5);
+  const saturday = getNextDayOfWeek(6);
+  const sunday = getNextDayOfWeek(0);
+  const nextSaturday = new Date(saturday);
+  nextSaturday.setDate(saturday.getDate() + 7);
+
+  return [
+    {
+      id: '1',
+      title: 'Allen Farmers Market',
+      description: 'Fresh produce, local vendors, live music, and family fun every Saturday morning. Support local businesses and enjoy the freshest ingredients Allen has to offer.',
+      date: formatDate(saturday),
+      time: '8:00 AM - 12:00 PM',
+      end_date: null,
+      location: 'Watters Creek',
+      address: '970 Garden Park Dr, Allen, TX',
+      category: 'Food',
+      source: 'Community Events',
+      source_url: null,
+      image_url: null,
+      cost: 'Free',
+      score: 9,
+      featured: true,
+      created_at: new Date().toISOString(),
+      scraped_at: new Date().toISOString(),
+    },
+    {
+      id: '2',
+      title: 'Live Music Friday',
+      description: 'Enjoy live local bands every Friday night on the outdoor stage. Bring your friends and family for a night of great music and good vibes.',
+      date: formatDate(friday),
+      time: '7:00 PM - 10:00 PM',
+      end_date: null,
+      location: 'The Yard Allen',
+      address: '107 N Greenville Ave, Allen, TX',
+      category: 'Music',
+      source: 'Community Events',
+      source_url: null,
+      image_url: null,
+      cost: 'Free',
+      score: 8,
+      featured: true,
+      created_at: new Date().toISOString(),
+      scraped_at: new Date().toISOString(),
+    },
+    {
+      id: '3',
+      title: 'Kids Art Workshop',
+      description: 'Creative painting session for children ages 5-12. All materials provided. Let your kids explore their artistic side in a fun, supportive environment.',
+      date: formatDate(nextSaturday),
+      time: '2:00 PM - 4:00 PM',
+      end_date: null,
+      location: 'Allen Arts Alliance',
+      address: '301 Century Pkwy, Allen, TX',
+      category: 'Family',
+      source: 'Eventbrite',
+      source_url: 'https://www.eventbrite.com/d/tx--allen/events/',
+      image_url: null,
+      cost: '$15 per child',
+      score: 8,
+      featured: false,
+      created_at: new Date().toISOString(),
+      scraped_at: new Date().toISOString(),
+    },
+    {
+      id: '4',
+      title: 'Allen Eagles Basketball',
+      description: 'Cheer on the Allen Eagles in this exciting home game. Experience the energy and school spirit as our team takes on district rivals.',
+      date: formatDate(saturday),
+      time: '7:00 PM',
+      end_date: null,
+      location: 'Allen High School',
+      address: '300 Rivercrest Blvd, Allen, TX',
+      category: 'Sports',
+      source: 'Allen ISD',
+      source_url: 'https://www.eventbrite.com/d/tx--allen/sports/',
+      image_url: null,
+      cost: '$8 adults, $5 students',
+      score: 7,
+      featured: false,
+      created_at: new Date().toISOString(),
+      scraped_at: new Date().toISOString(),
+    },
+    {
+      id: '5',
+      title: 'Food Truck Friday',
+      description: 'Over 15 food trucks featuring diverse cuisines. From tacos to BBQ to desserts, there\'s something for everyone at this weekly favorite.',
+      date: formatDate(friday),
+      time: '5:00 PM - 9:00 PM',
+      end_date: null,
+      location: 'Celebration Park',
+      address: '701 Angel Pkwy, Allen, TX',
+      category: 'Food',
+      source: 'City of Allen',
+      source_url: null,
+      image_url: null,
+      cost: 'Free entry',
+      score: 9,
+      featured: true,
+      created_at: new Date().toISOString(),
+      scraped_at: new Date().toISOString(),
+    },
+    {
+      id: '6',
+      title: 'Yoga in the Park',
+      description: 'Free outdoor yoga session for all levels. Bring your own mat. Start your weekend with mindfulness and movement in beautiful Bethany Lakes Park.',
+      date: formatDate(sunday),
+      time: '9:00 AM - 10:00 AM',
+      end_date: null,
+      location: 'Bethany Lakes Park',
+      address: '701 S Greenville Ave, Allen, TX',
+      category: 'Fitness',
+      source: 'Allen Parks & Recreation',
+      source_url: null,
+      image_url: null,
+      cost: 'Free',
+      score: 7,
+      featured: false,
+      created_at: new Date().toISOString(),
+      scraped_at: new Date().toISOString(),
+    },
+  ];
+}
 
 export function EventsGrid() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -143,17 +166,19 @@ export function EventsGrid() {
           setFilteredEvents(data.events);
           setUsingMockData(false);
         } else {
-          // Fallback to mock data
+          // Fallback to mock data with dynamic dates
           console.info('Using mock data - configure backend to see real events');
-          setEvents(MOCK_EVENTS);
-          setFilteredEvents(MOCK_EVENTS);
+          const mockEvents = generateMockEvents();
+          setEvents(mockEvents);
+          setFilteredEvents(mockEvents);
           setUsingMockData(true);
         }
       } catch (err) {
         // Fallback to mock data on error
         console.info('API error - using mock data:', err);
-        setEvents(MOCK_EVENTS);
-        setFilteredEvents(MOCK_EVENTS);
+        const mockEvents = generateMockEvents();
+        setEvents(mockEvents);
+        setFilteredEvents(mockEvents);
         setUsingMockData(true);
       } finally {
         setLoading(false);

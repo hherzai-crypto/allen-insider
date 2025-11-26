@@ -107,46 +107,136 @@ export async function scrapeAllenParksEvents(): Promise<ScrapedEvent[]> {
 
 /**
  * Scrape events from Eventbrite for Allen, TX
+ * Uses Eventbrite Discovery API (public, no auth needed)
  */
 export async function scrapeEventbriteEvents(): Promise<ScrapedEvent[]> {
   try {
-    // Eventbrite requires API key for proper access
-    // Using web scraping as fallback
-    const response = await axios.get('https://www.eventbrite.com/d/tx--allen/events/', {
-      timeout: 10000,
+    // Eventbrite Discovery API endpoint (public access, location-based search)
+    // Search for events in Allen, TX area (within 10 miles)
+    const response = await axios.get('https://www.eventbriteapi.com/v3/destination/events/', {
+      timeout: 15000,
+      params: {
+        'location.address': 'Allen, TX',
+        'location.within': '10mi',
+        'page_size': 50,
+        'expand': 'venue',
+        'start_date.keyword': 'this_week'
+      },
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
       }
     });
 
-    const $ = cheerio.load(response.data);
     const events: ScrapedEvent[] = [];
 
-    // Eventbrite uses dynamic content, so this is a basic scraper
-    $('[data-event-id]').each((_, element) => {
-      const title = $(element).find('h3, h2').first().text().trim();
-      const dateStr = $(element).find('time, .event-card__date').text().trim();
-      const location = $(element).find('.event-card__location, .location').text().trim();
-      const price = $(element).find('.event-card__price, .price').text().trim();
+    // Parse API response
+    if (response.data && response.data.events) {
+      for (const event of response.data.events) {
+        const startDate = event.start?.local || event.start?.utc;
+        if (!startDate) continue;
 
-      if (title) {
         events.push({
-          title,
-          description: title,
-          date: parseDate(dateStr) || getUpcomingWeekend(),
-          location: location || 'Allen, TX',
+          title: event.name?.text || event.name || 'Untitled Event',
+          description: event.description?.text || event.summary || '',
+          date: startDate.split('T')[0], // Extract YYYY-MM-DD
+          time: formatTime(startDate),
+          location: event.venue?.name || 'Allen, TX',
+          address: event.venue?.address ?
+            `${event.venue.address.address_1}, ${event.venue.address.city}, ${event.venue.address.region}` :
+            undefined,
           source: 'Eventbrite',
-          source_url: 'https://www.eventbrite.com/d/tx--allen/events/',
-          cost: price || 'See website'
+          source_url: event.url || 'https://www.eventbrite.com/d/tx--allen/events/',
+          cost: event.is_free ? 'Free' : 'Paid',
+          category: categorizeEvent(event.name?.text || event.name || ''),
+          image_url: event.logo?.url || undefined
         });
       }
-    });
+    }
 
-    return events.slice(0, 10);
+    return events.slice(0, 20);
   } catch (error) {
-    console.error('Error scraping Eventbrite:', error);
-    return [];
+    console.error('Error fetching Eventbrite events:', error);
+
+    // Fallback: Try HTML scraping
+    try {
+      const response = await axios.get('https://www.eventbrite.com/d/tx--allen/events/', {
+        timeout: 10000,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+        }
+      });
+
+      const $ = cheerio.load(response.data);
+      const events: ScrapedEvent[] = [];
+
+      $('[data-event-id]').each((_, element) => {
+        const title = $(element).find('h3, h2').first().text().trim();
+        const dateStr = $(element).find('time, .event-card__date').text().trim();
+        const location = $(element).find('.event-card__location, .location').text().trim();
+        const price = $(element).find('.event-card__price, .price').text().trim();
+
+        if (title) {
+          events.push({
+            title,
+            description: title,
+            date: parseDate(dateStr) || getUpcomingWeekend(),
+            location: location || 'Allen, TX',
+            source: 'Eventbrite',
+            source_url: 'https://www.eventbrite.com/d/tx--allen/events/',
+            cost: price || 'See website'
+          });
+        }
+      });
+
+      return events.slice(0, 10);
+    } catch (fallbackError) {
+      console.error('Eventbrite fallback also failed:', fallbackError);
+      return [];
+    }
   }
+}
+
+// Helper to format time from ISO string
+function formatTime(isoString: string): string {
+  try {
+    const date = new Date(isoString);
+    return date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    });
+  } catch {
+    return '';
+  }
+}
+
+// Helper to categorize events based on title keywords
+function categorizeEvent(title: string): string {
+  const titleLower = title.toLowerCase();
+
+  if (titleLower.includes('music') || titleLower.includes('concert') || titleLower.includes('band')) {
+    return 'Music';
+  }
+  if (titleLower.includes('food') || titleLower.includes('restaurant') || titleLower.includes('dining')) {
+    return 'Food';
+  }
+  if (titleLower.includes('kid') || titleLower.includes('family') || titleLower.includes('children')) {
+    return 'Family';
+  }
+  if (titleLower.includes('sport') || titleLower.includes('game') || titleLower.includes('athletic')) {
+    return 'Sports';
+  }
+  if (titleLower.includes('art') || titleLower.includes('gallery') || titleLower.includes('exhibition')) {
+    return 'Arts';
+  }
+  if (titleLower.includes('fitness') || titleLower.includes('yoga') || titleLower.includes('workout')) {
+    return 'Fitness';
+  }
+  if (titleLower.includes('shop') || titleLower.includes('market') || titleLower.includes('sale')) {
+    return 'Shopping';
+  }
+
+  return 'Entertainment';
 }
 
 /**
