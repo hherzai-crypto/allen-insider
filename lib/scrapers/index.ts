@@ -790,26 +790,66 @@ function formatTime(isoString: string): string {
 function categorizeEvent(title: string): string {
   const titleLower = title.toLowerCase();
 
-  if (titleLower.includes('music') || titleLower.includes('concert') || titleLower.includes('band')) {
+  // Music events
+  if (titleLower.includes('music') || titleLower.includes('concert') || titleLower.includes('band') ||
+      titleLower.includes('dj') || titleLower.includes('singing') || titleLower.includes('karaoke') ||
+      titleLower.includes('live music') || titleLower.includes('jazz') || titleLower.includes('rock') ||
+      titleLower.includes('r&b') || titleLower.includes('r & b') || titleLower.includes('hip hop')) {
     return 'Music';
   }
-  if (titleLower.includes('food') || titleLower.includes('restaurant') || titleLower.includes('dining')) {
+
+  // Food events
+  if (titleLower.includes('food') || titleLower.includes('restaurant') || titleLower.includes('dining') ||
+      titleLower.includes('wine') || titleLower.includes('beer') || titleLower.includes('tasting') ||
+      titleLower.includes('brunch') || titleLower.includes('dinner') || titleLower.includes('lunch') ||
+      titleLower.includes('truck') || titleLower.includes('cook') || titleLower.includes('chef')) {
     return 'Food';
   }
-  if (titleLower.includes('kid') || titleLower.includes('family') || titleLower.includes('children')) {
+
+  // Family/Kids events
+  if (titleLower.includes('kid') || titleLower.includes('family') || titleLower.includes('children') ||
+      titleLower.includes('child') || titleLower.includes('baby') || titleLower.includes('toddler') ||
+      titleLower.includes('parent')) {
     return 'Family';
   }
-  if (titleLower.includes('sport') || titleLower.includes('game') || titleLower.includes('athletic')) {
+
+  // Sports events
+  if (titleLower.includes('sport') || titleLower.includes('game') || titleLower.includes('athletic') ||
+      titleLower.includes('basketball') || titleLower.includes('football') || titleLower.includes('soccer') ||
+      titleLower.includes('baseball') || titleLower.includes('volleyball') || titleLower.includes('eagles') ||
+      titleLower.includes('tournament') || titleLower.includes('race') || titleLower.includes('run')) {
     return 'Sports';
   }
-  if (titleLower.includes('art') || titleLower.includes('gallery') || titleLower.includes('exhibition')) {
+
+  // Arts & Culture events
+  if (titleLower.includes('art') || titleLower.includes('gallery') || titleLower.includes('exhibition') ||
+      titleLower.includes('paint') || titleLower.includes('draw') || titleLower.includes('craft') ||
+      titleLower.includes('theater') || titleLower.includes('theatre') || titleLower.includes('museum') ||
+      titleLower.includes('culture') || titleLower.includes('photography')) {
     return 'Arts';
   }
-  if (titleLower.includes('fitness') || titleLower.includes('yoga') || titleLower.includes('workout')) {
+
+  // Fitness/Wellness events
+  if (titleLower.includes('fitness') || titleLower.includes('yoga') || titleLower.includes('workout') ||
+      titleLower.includes('gym') || titleLower.includes('exercise') || titleLower.includes('wellness') ||
+      titleLower.includes('health') || titleLower.includes('meditation') || titleLower.includes('pilates')) {
     return 'Fitness';
   }
-  if (titleLower.includes('shop') || titleLower.includes('market') || titleLower.includes('sale')) {
+
+  // Shopping events
+  if (titleLower.includes('shop') || titleLower.includes('market') || titleLower.includes('sale') ||
+      titleLower.includes('vendor') || titleLower.includes('boutique') || titleLower.includes('retail') ||
+      titleLower.includes('mall') || titleLower.includes('outlet')) {
     return 'Shopping';
+  }
+
+  // Entertainment/Party events (check for party keywords)
+  if (titleLower.includes('party') || titleLower.includes('night') || titleLower.includes('ladies') ||
+      titleLower.includes('girls night') || titleLower.includes('dance') || titleLower.includes('club') ||
+      titleLower.includes('bar') || titleLower.includes('happy hour') || titleLower.includes('nye') ||
+      titleLower.includes('new year') || titleLower.includes('christmas') || titleLower.includes('holiday') ||
+      titleLower.includes('halloween') || titleLower.includes('costume') || titleLower.includes('celebration')) {
+    return 'Entertainment';
   }
 
   return 'Entertainment';
