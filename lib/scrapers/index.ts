@@ -364,6 +364,324 @@ export async function scrapeAllenISDEvents(): Promise<ScrapedEvent[]> {
 }
 
 /**
+ * Scrape events from Allen High School Athletics
+ * Weight: 8/10 (High school sports - huge community draw)
+ */
+export async function scrapeAllenEaglesAthletics(): Promise<ScrapedEvent[]> {
+  try {
+    const response = await axios.get('https://www.allenisd.org/domain/72', {
+      timeout: 10000,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+
+    const $ = cheerio.load(response.data);
+    const events: ScrapedEvent[] = [];
+
+    $('.event, .game, .schedule-item').each((_, element) => {
+      const title = $(element).find('h2, h3, .title, .opponent').first().text().trim();
+      const dateStr = $(element).find('.date, time').text().trim();
+      const time = $(element).find('.time').text().trim();
+      const location = $(element).find('.location, .venue').text().trim();
+
+      if (title && title.length > 3) {
+        events.push({
+          title: `Allen Eagles - ${title}`,
+          description: `High school athletics event. Go Eagles!`,
+          date: parseDate(dateStr) || getUpcomingWeekend(),
+          time: time || undefined,
+          location: location || 'Allen High School',
+          address: '300 Rivercrest Blvd, Allen, TX 75002',
+          source: 'Allen Eagles Athletics',
+          source_url: 'https://www.allenisd.org/domain/72',
+          category: 'Sports',
+          cost: '$8 adults, $5 students',
+          score: 8
+        });
+      }
+    });
+
+    return events.slice(0, 10);
+  } catch (error) {
+    console.error('Error scraping Allen Eagles Athletics:', error);
+    return [];
+  }
+}
+
+/**
+ * Scrape events from Collin College Allen Campus
+ * Weight: 6/10 (College events, lectures, performances)
+ */
+export async function scrapeCollinCollegeEvents(): Promise<ScrapedEvent[]> {
+  try {
+    const response = await axios.get('https://www.collin.edu/calendar/', {
+      timeout: 10000,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+
+    const $ = cheerio.load(response.data);
+    const events: ScrapedEvent[] = [];
+
+    $('.event, .calendar-event').each((_, element) => {
+      const title = $(element).find('h2, h3, .title').first().text().trim();
+      const description = $(element).find('.description, p').first().text().trim();
+      const dateStr = $(element).find('.date, time').text().trim();
+      const location = $(element).find('.location').text().trim();
+
+      // Filter for Allen campus events
+      if (title && (location.toLowerCase().includes('allen') || title.toLowerCase().includes('allen'))) {
+        events.push({
+          title,
+          description: description || title,
+          date: parseDate(dateStr) || getUpcomingWeekend(),
+          location: 'Collin College - Allen Campus',
+          address: '3452 Spur 399, McKinney, TX 75069',
+          source: 'Collin College',
+          source_url: 'https://www.collin.edu/calendar/',
+          category: categorizeEvent(title),
+          cost: 'Free',
+          score: 6
+        });
+      }
+    });
+
+    return events.slice(0, 5);
+  } catch (error) {
+    console.error('Error scraping Collin College:', error);
+    return [];
+  }
+}
+
+/**
+ * Scrape events from Meetup for Allen, TX
+ * Weight: 7/10 (Community groups, networking, hobbies)
+ */
+export async function scrapeMeetupEvents(): Promise<ScrapedEvent[]> {
+  try {
+    const response = await axios.get('https://www.meetup.com/find/?location=Allen%2C%20TX&source=EVENTS', {
+      timeout: 10000,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+
+    const $ = cheerio.load(response.data);
+    const events: ScrapedEvent[] = [];
+
+    $('[data-event-id]').each((_, element) => {
+      const title = $(element).find('h3, h2').first().text().trim();
+      const description = $(element).find('p').first().text().trim();
+      const dateStr = $(element).find('time').attr('datetime') || $(element).find('.event-time').text().trim();
+      const location = $(element).find('.venue-name, .location').text().trim();
+      const groupName = $(element).find('.group-name').text().trim();
+
+      if (title && title.length > 3) {
+        events.push({
+          title,
+          description: description || `${groupName} meetup event`,
+          date: parseDate(dateStr) || getUpcomingWeekend(),
+          location: location || 'Allen, TX',
+          source: 'Meetup',
+          source_url: 'https://www.meetup.com/find/?location=Allen%2C%20TX',
+          category: categorizeEvent(title),
+          score: 7
+        });
+      }
+    });
+
+    return events.slice(0, 10);
+  } catch (error) {
+    console.error('Error scraping Meetup:', error);
+    return [];
+  }
+}
+
+/**
+ * Scrape events from The Village at Allen
+ * Weight: 6/10 (Shopping center events)
+ */
+export async function scrapeVillageAtAllenEvents(): Promise<ScrapedEvent[]> {
+  try {
+    const response = await axios.get('https://thevillageatallen.com/events', {
+      timeout: 10000,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+
+    const $ = cheerio.load(response.data);
+    const events: ScrapedEvent[] = [];
+
+    $('.event, .event-item, article').each((_, element) => {
+      const title = $(element).find('h2, h3, .title').first().text().trim();
+      const description = $(element).find('.description, p').first().text().trim();
+      const dateStr = $(element).find('.date, time').text().trim();
+      const time = $(element).find('.time').text().trim();
+
+      if (title && title.length > 3) {
+        events.push({
+          title,
+          description: description || title,
+          date: parseDate(dateStr) || getUpcomingWeekend(),
+          time: time || undefined,
+          location: 'The Village at Allen',
+          address: '620 W McDermott Dr, Allen, TX 75013',
+          source: 'The Village at Allen',
+          source_url: 'https://thevillageatallen.com/events',
+          category: categorizeEvent(title),
+          score: 6
+        });
+      }
+    });
+
+    return events;
+  } catch (error) {
+    console.error('Error scraping The Village at Allen:', error);
+    return [];
+  }
+}
+
+/**
+ * Scrape events from Allen Public Library
+ * Weight: 7/10 (Community programs, author events, classes)
+ */
+export async function scrapeAllenLibraryEvents(): Promise<ScrapedEvent[]> {
+  try {
+    const response = await axios.get('https://www.cityofallen.org/346/Library-Events', {
+      timeout: 10000,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+
+    const $ = cheerio.load(response.data);
+    const events: ScrapedEvent[] = [];
+
+    $('.event, .program, .library-event').each((_, element) => {
+      const title = $(element).find('h2, h3, .title').first().text().trim();
+      const description = $(element).find('.description, p').first().text().trim();
+      const dateStr = $(element).find('.date, time').text().trim();
+      const time = $(element).find('.time').text().trim();
+
+      if (title && title.length > 3) {
+        events.push({
+          title,
+          description: description || title,
+          date: parseDate(dateStr) || getUpcomingWeekend(),
+          time: time || undefined,
+          location: 'Allen Public Library',
+          address: '300 N Allen Dr, Allen, TX 75013',
+          source: 'Allen Public Library',
+          source_url: 'https://www.cityofallen.org/346/Library-Events',
+          category: 'Family',
+          cost: 'Free',
+          score: 7
+        });
+      }
+    });
+
+    return events;
+  } catch (error) {
+    console.error('Error scraping Allen Library:', error);
+    return [];
+  }
+}
+
+/**
+ * Scrape events from Chase Oaks Church Allen Campus
+ * Weight: 6/10 (Church events, community service)
+ */
+export async function scrapeChaseOaksEvents(): Promise<ScrapedEvent[]> {
+  try {
+    const response = await axios.get('https://www.chaseoaks.org/allen/events', {
+      timeout: 10000,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+
+    const $ = cheerio.load(response.data);
+    const events: ScrapedEvent[] = [];
+
+    $('.event, .event-item').each((_, element) => {
+      const title = $(element).find('h2, h3, .title').first().text().trim();
+      const description = $(element).find('.description, p').first().text().trim();
+      const dateStr = $(element).find('.date, time').text().trim();
+      const time = $(element).find('.time').text().trim();
+
+      if (title && title.length > 3) {
+        events.push({
+          title,
+          description: description || title,
+          date: parseDate(dateStr) || getUpcomingWeekend(),
+          time: time || undefined,
+          location: 'Chase Oaks Church - Allen',
+          address: '515 S Watters Rd, Allen, TX 75013',
+          source: 'Chase Oaks Church',
+          source_url: 'https://www.chaseoaks.org/allen/events',
+          category: 'Family',
+          cost: 'Free',
+          score: 6
+        });
+      }
+    });
+
+    return events.slice(0, 5);
+  } catch (error) {
+    console.error('Error scraping Chase Oaks:', error);
+    return [];
+  }
+}
+
+/**
+ * Scrape events from Yelp Events
+ * Weight: 6/10 (Restaurant events, tastings, live music)
+ */
+export async function scrapeYelpEvents(): Promise<ScrapedEvent[]> {
+  try {
+    const response = await axios.get('https://www.yelp.com/events/allen-tx-us', {
+      timeout: 10000,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      }
+    });
+
+    const $ = cheerio.load(response.data);
+    const events: ScrapedEvent[] = [];
+
+    $('[data-testid*="event"], .event-item').each((_, element) => {
+      const title = $(element).find('h2, h3, h4').first().text().trim();
+      const description = $(element).find('p').first().text().trim();
+      const dateStr = $(element).find('time').attr('datetime') || $(element).find('.date').text().trim();
+      const location = $(element).find('.business-name, .venue').text().trim();
+      const cost = $(element).find('.price, .cost').text().trim();
+
+      if (title && title.length > 3) {
+        events.push({
+          title,
+          description: description || title,
+          date: parseDate(dateStr) || getUpcomingWeekend(),
+          location: location || 'Allen, TX',
+          source: 'Yelp',
+          source_url: 'https://www.yelp.com/events/allen-tx-us',
+          cost: cost || 'See website',
+          category: categorizeEvent(title),
+          score: 6
+        });
+      }
+    });
+
+    return events.slice(0, 10);
+  } catch (error) {
+    console.error('Error scraping Yelp Events:', error);
+    return [];
+  }
+}
+
+/**
  * Scrape events from Eventbrite for Allen, TX
  * Uses Eventbrite Discovery API (public, no auth needed)
  */
@@ -600,23 +918,32 @@ export async function generateCommunityEvents(): Promise<ScrapedEvent[]> {
 
 /**
  * Master scraper that combines all sources
- * Prioritized by tier: Tier 1 (weight 10-9) → Tier 2 (weight 8-7) → Community events
+ * Prioritized by tier: Tier 1-4 with comprehensive Allen, TX coverage
  */
 export async function scrapeAllEvents(): Promise<ScrapedEvent[]> {
-  console.log('Starting event scraping from multiple sources...');
+  console.log('Starting comprehensive event scraping from 17 sources...');
 
   const results = await Promise.allSettled([
-    // Tier 1: Official & High-Priority Sources
+    // Tier 1: Official & High-Priority Sources (Weight 10-9)
     scrapeVisitAllenEvents(),         // Weight 10 - Official tourism site
-    scrapeWattersCreekEvents(),       // Weight 9 - Major venue
-    scrapeAllenISDEvents(),           // Weight 9 - School events (family focus)
+    scrapeWattersCreekEvents(),       // Weight 9 - Major entertainment venue
+    scrapeAllenISDEvents(),           // Weight 9 - School district calendar
     scrapeAllenEventCenter(),         // Weight 8 - Concerts, trade shows
     scrapeEventbriteEvents(),         // Weight 8 - Comprehensive event platform
 
-    // Tier 2: Additional Sources
+    // Tier 2: School & Community Sources (Weight 8-7)
+    scrapeAllenEaglesAthletics(),     // Weight 8 - High school sports
+    scrapeAllenLibraryEvents(),       // Weight 7 - Library programs
     scrapeCityOfAllenEvents(),        // Weight 7 - City calendar
     scrapeAllenParksEvents(),         // Weight 7 - Parks & Recreation
     scrapeAllenPremiumOutlets(),      // Weight 7 - Shopping events
+    scrapeMeetupEvents(),             // Weight 7 - Community groups
+
+    // Tier 3: Local Venues & Churches (Weight 6)
+    scrapeVillageAtAllenEvents(),     // Weight 6 - Shopping center
+    scrapeChaseOaksEvents(),          // Weight 6 - Church events
+    scrapeCollinCollegeEvents(),      // Weight 6 - College events
+    scrapeYelpEvents(),               // Weight 6 - Restaurant/nightlife
 
     // Community/Generated Events (fallback)
     generateCommunityEvents()
