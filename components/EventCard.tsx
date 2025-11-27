@@ -11,12 +11,27 @@ export function EventCard({ event }: { event: Event }) {
     <>
       <div
         onClick={() => setShowModal(true)}
-        className="bg-white rounded-xl border border-gray-200 overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-1 cursor-pointer"
+        className="group relative bg-white rounded-2xl border-2 border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-primary-teal/10 hover:-translate-y-2 hover:border-primary-teal/30 cursor-pointer"
       >
+        {/* Gradient overlay on hover */}
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-teal/0 to-teal-light/0 group-hover:from-primary-teal/5 group-hover:to-teal-light/5 transition-all duration-300" />
+
+        {/* Featured badge */}
+        {event.featured && (
+          <div className="absolute top-4 right-4 z-10">
+            <div className="bg-secondary-gold text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1">
+              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+              FEATURED
+            </div>
+          </div>
+        )}
+
         {/* Category Tag */}
-        <div className="p-4 pb-0">
+        <div className="relative p-5 pb-0">
           <span
-            className="inline-block px-3 py-1 text-xs font-semibold text-white rounded"
+            className="inline-block px-4 py-1.5 text-xs font-bold text-white rounded-lg shadow-md"
             style={{ backgroundColor: categoryColors[event.category] || '#6B6B6B' }}
           >
             {event.category}
@@ -24,17 +39,19 @@ export function EventCard({ event }: { event: Event }) {
         </div>
 
         {/* Content */}
-        <div className="p-5">
-          <h3 className="font-heading font-semibold text-xl text-primary-teal mb-3">
+        <div className="relative p-6 pt-4">
+          <h3 className="font-heading font-bold text-xl lg:text-2xl text-primary-teal mb-4 group-hover:text-teal-light transition-colors">
             {event.title}
           </h3>
 
-          <div className="space-y-2 mb-3">
-            <div className="flex items-center gap-2 text-sm text-text-secondary">
-              <Calendar size={16} />
-              <span>
+          <div className="space-y-2.5 mb-4">
+            <div className="flex items-center gap-2.5 text-sm text-text-secondary">
+              <div className="flex-shrink-0 w-8 h-8 bg-teal-50 rounded-lg flex items-center justify-center group-hover:bg-teal-100 transition-colors">
+                <Calendar size={16} className="text-primary-teal" />
+              </div>
+              <span className="font-medium">
                 {new Date(event.date).toLocaleDateString('en-US', {
-                  weekday: 'long',
+                  weekday: 'short',
                   month: 'short',
                   day: 'numeric',
                 })}
@@ -43,28 +60,35 @@ export function EventCard({ event }: { event: Event }) {
             </div>
 
             {event.location && (
-              <div className="flex items-center gap-2 text-sm text-text-secondary">
-                <MapPin size={16} />
-                <span>{event.location}</span>
+              <div className="flex items-center gap-2.5 text-sm text-text-secondary">
+                <div className="flex-shrink-0 w-8 h-8 bg-teal-50 rounded-lg flex items-center justify-center group-hover:bg-teal-100 transition-colors">
+                  <MapPin size={16} className="text-primary-teal" />
+                </div>
+                <span className="font-medium truncate">{event.location}</span>
               </div>
             )}
 
             {event.cost && (
-              <div className="flex items-center gap-2 text-sm text-text-secondary">
-                <DollarSign size={16} />
-                <span>{event.cost}</span>
+              <div className="flex items-center gap-2.5 text-sm text-text-secondary">
+                <div className="flex-shrink-0 w-8 h-8 bg-teal-50 rounded-lg flex items-center justify-center group-hover:bg-teal-100 transition-colors">
+                  <DollarSign size={16} className="text-primary-teal" />
+                </div>
+                <span className="font-semibold text-primary-teal">{event.cost}</span>
               </div>
             )}
           </div>
 
           {event.description && (
-            <p className="text-sm text-text-primary leading-relaxed mb-4 line-clamp-3">
+            <p className="text-sm text-text-primary leading-relaxed mb-5 line-clamp-3">
               {event.description}
             </p>
           )}
 
-          <button className="text-primary-teal text-sm font-semibold hover:text-teal-light inline-flex items-center gap-1">
-            View Details →
+          <button className="inline-flex items-center gap-2 text-primary-teal text-sm font-bold group-hover:gap-3 transition-all">
+            <span>View Details</span>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
           </button>
         </div>
       </div>

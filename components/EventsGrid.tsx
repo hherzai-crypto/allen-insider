@@ -200,28 +200,32 @@ export function EventsGrid() {
   }, [selectedCategory, events]);
 
   return (
-    <section id="events" className="py-16 bg-bg-offwhite">
+    <section id="events" className="py-20 bg-gradient-to-b from-bg-offwhite to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="font-heading font-bold text-3xl sm:text-4xl text-text-primary mb-4">
-            This Week in <span className="text-primary-teal">Allen</span>
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center gap-2 bg-teal-50 border border-primary-teal/20 rounded-full px-4 py-1.5 mb-6">
+            <span className="w-2 h-2 bg-primary-teal rounded-full animate-pulse" />
+            <span className="text-primary-teal text-sm font-medium">22+ Events This Week</span>
+          </div>
+          <h2 className="font-heading font-extrabold text-4xl sm:text-5xl lg:text-6xl text-text-primary mb-6 tracking-tight">
+            This Week in <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-teal to-teal-light">Allen</span>
           </h2>
-          <p className="text-text-secondary text-lg max-w-2xl mx-auto">
-            The best events happening in Allen this weekend, curated just for you.
+          <p className="text-text-secondary text-xl max-w-2xl mx-auto font-light">
+            The best events happening in Allen, curated just for you
           </p>
         </div>
 
-        {/* Category filters */}
-        <div className="flex flex-wrap gap-2 justify-center mb-8">
+        {/* Category filters with modern design */}
+        <div className="flex flex-wrap gap-3 justify-center mb-12">
           {['All', 'Music', 'Food', 'Family', 'Sports', 'Arts', 'Fitness', 'Entertainment'].map(
             (category) => (
               <button
                 key={category}
                 onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 ${
                   category === selectedCategory
-                    ? 'bg-primary-teal text-white'
-                    : 'bg-white text-text-secondary border border-gray-200 hover:border-primary-teal hover:text-primary-teal'
+                    ? 'bg-gradient-to-r from-primary-teal to-teal-light text-white shadow-lg shadow-primary-teal/30 scale-105'
+                    : 'bg-white text-text-secondary border-2 border-gray-200 hover:border-primary-teal hover:text-primary-teal hover:-translate-y-0.5 hover:shadow-md'
                 }`}
               >
                 {category}
