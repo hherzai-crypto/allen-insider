@@ -26,7 +26,9 @@ export type EventCategory =
   | 'Arts'
   | 'Shopping'
   | 'Fitness'
-  | 'Entertainment';
+  | 'Entertainment'
+  | 'Community'
+  | 'Education';
 
 export interface Subscriber {
   id: string;
@@ -38,6 +40,7 @@ export interface Subscriber {
   last_email_sent: string | null;
   email_opens: number;
   email_clicks: number;
+  preferred_categories: EventCategory[] | null; // User's category preferences for personalized emails
 }
 
 export interface Newsletter {
@@ -75,4 +78,6 @@ export const categoryColors: Record<EventCategory, string> = {
   Arts: '#E91E63',
   Shopping: '#FF6B6B',
   Fitness: '#27AE60',
+  Community: '#34495E',
+  Education: '#16A085',
 };

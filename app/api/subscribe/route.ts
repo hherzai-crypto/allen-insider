@@ -3,11 +3,13 @@ import { createClient } from '@/lib/supabase';
 import { sendWelcomeEmail } from '@/lib/sendgrid';
 import { rateLimit, getClientIP } from '@/lib/rate-limit';
 import { z } from 'zod';
+import { EventCategory } from '@/lib/types';
 
 const subscribeSchema = z.object({
   email: z.string().email(),
   source: z.string().optional(),
   honeypot: z.string().optional(),
+  preferred_categories: z.array(z.string()).nullable().optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -38,7 +40,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { email, source, honeypot } = subscribeSchema.parse(body);
+    const { email, source, honeypot, preferred_categories } = subscribeSchema.parse(body);
 
     // Honeypot check - if filled, it's a bot
     if (honeypot) {
@@ -69,7 +71,11 @@ export async function POST(request: NextRequest) {
         // Reactivate unsubscribed user
         await supabase
           .from('subscribers')
-          .update({ status: 'active', subscribed_at: new Date().toISOString() })
+          .update({
+            status: 'active',
+            subscribed_at: new Date().toISOString(),
+            preferred_categories: preferred_categories || null
+          })
           .eq('id', existing.id);
 
         return NextResponse.json({
@@ -91,18 +97,32 @@ export async function POST(request: NextRequest) {
       status: 'pending',
       verification_token: verificationToken,
       verification_token_expires: tokenExpires.toISOString(),
+      preferred_categories: preferred_categories || null,
     });
 
     if (error) throw error;
 
-    // Send verification email
-    const verificationUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/verify?token=${verificationToken}`;
-    await sendWelcomeEmail(email, verificationUrl);
+    // Send verification email (optional in development)
+    try {
+      const verificationUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/verify?token=${verificationToken}`;
+      await sendWelcomeEmail(email, verificationUrl);
 
-    return NextResponse.json({
-      success: true,
-      message: 'Almost there! Please check your email to verify your subscription.',
-    });
+      return NextResponse.json({
+        success: true,
+        message: 'Almost there! Please check your email to verify your subscription.',
+      });
+    } catch (emailError: any) {
+      // If SendGrid is not configured (development), still return success
+      if (emailError?.code === 401 || process.env.SENDGRID_API_KEY === 'SG.placeholder') {
+        console.warn('SendGrid not configured - skipping verification email in development');
+        return NextResponse.json({
+          success: true,
+          message: 'Successfully subscribed! (Email verification skipped in development)',
+        });
+      }
+      // Re-throw other email errors
+      throw emailError;
+    }
   } catch (error) {
     console.error('Subscribe error:', error);
 

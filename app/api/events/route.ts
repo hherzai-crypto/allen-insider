@@ -1,13 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase';
-import { Event } from '@/lib/types';
+import { Event, EventCategory } from '@/lib/types';
 import { scrapeAllEvents } from '@/lib/scrapers';
+
+// Simple in-memory cache
+let cachedEvents: Event[] | null = null;
+let cacheTimestamp: number | null = null;
+const CACHE_DURATION = 6 * 60 * 60 * 1000; // 6 hours in milliseconds
 
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const category = searchParams.get('category');
-    const limit = parseInt(searchParams.get('limit') || '20');
+    const limit = parseInt(searchParams.get('limit') || '100');
     const upcoming = searchParams.get('upcoming') === 'true';
 
     // Try database first
@@ -42,22 +47,21 @@ export async function GET(request: NextRequest) {
       console.log('Database unavailable, falling back to live scraping');
     }
 
-    // Fallback: Scrape events directly
-    console.log('Fetching events directly from scrapers...');
-    const scrapedEvents = await scrapeAllEvents();
+    // Check cache before scraping
+    const now = Date.now();
+    const cacheValid = cachedEvents && cacheTimestamp && (now - cacheTimestamp < CACHE_DURATION);
 
-    // Convert scraped events to Event format
-    const events: Event[] = scrapedEvents
-      .filter(event => {
-        if (category && event.category !== category) return false;
-        if (upcoming) {
-          const today = new Date().toISOString().split('T')[0];
-          return event.date >= today;
-        }
-        return true;
-      })
-      .slice(0, limit)
-      .map((event, index) => ({
+    let scrapedEvents;
+    if (cacheValid) {
+      console.log('Using cached events (cache hit)');
+      scrapedEvents = cachedEvents!;
+    } else {
+      // Fallback: Scrape events directly
+      console.log('Fetching events directly from scrapers...');
+      scrapedEvents = await scrapeAllEvents();
+
+      // Update cache
+      cachedEvents = scrapedEvents.map((event, index) => ({
         id: `scraped-${index}`,
         title: event.title,
         description: event.description || event.title,
@@ -66,7 +70,7 @@ export async function GET(request: NextRequest) {
         end_date: event.end_date || null,
         location: event.location || 'Allen, TX',
         address: event.address || null,
-        category: event.category || 'Entertainment',
+        category: (event.category || 'Entertainment') as EventCategory,
         source: event.source,
         source_url: event.source_url || null,
         image_url: event.image_url || null,
@@ -76,6 +80,21 @@ export async function GET(request: NextRequest) {
         created_at: new Date().toISOString(),
         scraped_at: new Date().toISOString(),
       }));
+      cacheTimestamp = now;
+      console.log(`Cached ${cachedEvents.length} events for 6 hours`);
+    }
+
+    // Filter events based on query parameters
+    const events: Event[] = scrapedEvents
+      .filter(event => {
+        if (category && event.category !== category) return false;
+        if (upcoming) {
+          const today = new Date().toISOString().split('T')[0];
+          return event.date >= today;
+        }
+        return true;
+      })
+      .slice(0, limit);
 
     return NextResponse.json({
       success: true,

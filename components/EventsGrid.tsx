@@ -148,7 +148,7 @@ function generateMockEvents(): Event[] {
 export function EventsGrid() {
   const [events, setEvents] = useState<Event[]>([]);
   const [filteredEvents, setFilteredEvents] = useState<Event[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [selectedCategory, setSelectedCategory] = useState<string>('Featured');
   const [loading, setLoading] = useState(true);
   const [usingMockData, setUsingMockData] = useState(false);
 
@@ -157,7 +157,7 @@ export function EventsGrid() {
     async function fetchEvents() {
       try {
         setLoading(true);
-        const response = await fetch('/api/events?upcoming=true&limit=20');
+        const response = await fetch('/api/events?upcoming=true&limit=100');
         const data = await response.json();
 
         if (data.success && data.events && data.events.length > 0) {
@@ -192,6 +192,20 @@ export function EventsGrid() {
   useEffect(() => {
     if (selectedCategory === 'All') {
       setFilteredEvents(events);
+    } else if (selectedCategory === 'Featured') {
+      // Show top 2 events from each category (highest score)
+      const categories = ['Music', 'Food', 'Family', 'Sports', 'Arts', 'Fitness', 'Shopping', 'Entertainment', 'Community', 'Education'];
+      const featured: Event[] = [];
+
+      categories.forEach(category => {
+        const categoryEvents = events
+          .filter(event => event.category === category)
+          .sort((a, b) => (b.score || 0) - (a.score || 0))
+          .slice(0, 2);
+        featured.push(...categoryEvents);
+      });
+
+      setFilteredEvents(featured);
     } else {
       setFilteredEvents(
         events.filter((event) => event.category === selectedCategory)
@@ -204,8 +218,7 @@ export function EventsGrid() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 bg-teal-50 border border-primary-teal/20 rounded-full px-4 py-1.5 mb-6">
-            <span className="w-2 h-2 bg-primary-teal rounded-full animate-pulse" />
-            <span className="text-primary-teal text-sm font-medium">22+ Events This Week</span>
+            <span className="text-primary-teal text-sm font-medium">{events.length}+ Events This Week</span>
           </div>
           <h2 className="font-heading font-extrabold text-4xl sm:text-5xl lg:text-6xl text-text-primary mb-6 tracking-tight">
             This Week in <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-teal to-teal-light">Allen</span>
@@ -217,7 +230,7 @@ export function EventsGrid() {
 
         {/* Category filters with modern design */}
         <div className="flex flex-wrap gap-3 justify-center mb-12">
-          {['All', 'Music', 'Food', 'Family', 'Sports', 'Arts', 'Fitness', 'Entertainment'].map(
+          {['Featured', 'All', 'Music', 'Food', 'Family', 'Sports', 'Arts', 'Fitness', 'Shopping', 'Entertainment', 'Community', 'Education'].map(
             (category) => (
               <button
                 key={category}
@@ -257,8 +270,8 @@ export function EventsGrid() {
         {/* Events grid */}
         {!loading && filteredEvents.length > 0 && (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {filteredEvents.map((event) => (
-              <EventCard key={event.id} event={event} />
+            {filteredEvents.map((event, index) => (
+              <EventCard key={`${event.id}-${index}`} event={event} />
             ))}
           </div>
         )}

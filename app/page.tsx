@@ -3,6 +3,7 @@ import { Hero } from '@/components/Hero';
 import { EventsGrid } from '@/components/EventsGrid';
 import { Footer } from '@/components/Footer';
 import { ChatWidget } from '@/components/ChatWidget';
+import { SubscribeForm } from '@/components/SubscribeForm';
 
 export default function Home() {
   return (
@@ -52,21 +53,7 @@ export default function Home() {
               Join hundreds of Allen locals who get the best events delivered to
               their inbox every Thursday. It&apos;s free, and you can unsubscribe anytime.
             </p>
-            <div className="max-w-md mx-auto">
-              <form className="flex flex-col sm:flex-row gap-3">
-                <input
-                  type="email"
-                  placeholder="your@email.com"
-                  className="flex-1 px-5 py-3.5 rounded-lg outline-none focus:ring-2 focus:ring-secondary-gold"
-                />
-                <button
-                  type="submit"
-                  className="bg-secondary-gold text-text-primary px-8 py-3.5 rounded-lg font-heading font-semibold hover:-translate-y-0.5 hover:shadow-lg transition-all"
-                >
-                  Subscribe
-                </button>
-              </form>
-            </div>
+            <SubscribeForm />
           </div>
         </section>
       </main>

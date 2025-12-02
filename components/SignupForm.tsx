@@ -81,7 +81,7 @@ export function SignupForm() {
         onChange={(e) => setEmail(e.target.value)}
         required
         disabled={status === 'loading'}
-        className="flex-1 px-5 py-3.5 text-base border-2 border-white/20 bg-white/10 backdrop-blur-sm text-white placeholder-white/60 rounded-lg outline-none focus:border-secondary-gold focus:bg-white/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex-1 px-5 py-3.5 text-base border-2 border-gray-200 bg-white text-gray-900 placeholder-gray-400 rounded-lg outline-none focus:border-secondary-gold focus:ring-2 focus:ring-secondary-gold/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
       />
       <button
         type="submit"
