@@ -27,7 +27,7 @@ export function Hero() {
           </div>
 
           {/* Main headline with better typography */}
-          <h1 className="font-heading font-extrabold text-5xl sm:text-6xl lg:text-7xl text-white leading-[1.1] mb-6 tracking-tight animate-slide-up">
+          <h1 className="font-heading font-extrabold text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-[1.1] mb-6 tracking-tight animate-slide-up px-2 sm:px-0">
             Discover What&apos;s Happening in{' '}
             <span className="text-secondary-gold inline-block animate-shimmer bg-gradient-to-r from-secondary-gold via-yellow-200 to-secondary-gold bg-[length:200%_100%]">
               Allen
@@ -35,7 +35,7 @@ export function Hero() {
           </h1>
 
           {/* Subheadline */}
-          <p className="text-xl sm:text-2xl text-white/90 mb-10 leading-relaxed max-w-2xl mx-auto font-light animate-slide-up-delayed">
+          <p className="text-lg sm:text-xl md:text-2xl text-white/90 mb-10 leading-relaxed max-w-2xl mx-auto font-light animate-slide-up-delayed px-4 sm:px-0">
             Your weekly curated guide to concerts, festivals, family fun, and hidden gems —
             <span className="font-semibold text-white"> delivered every Thursday.</span>
           </p>
@@ -58,11 +58,11 @@ export function Hero() {
           {/* Stats with glassmorphism cards */}
           <div className="grid grid-cols-3 gap-4 sm:gap-6 max-w-2xl mx-auto">
             <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 sm:p-6 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:-translate-y-1">
-              <div className="text-3xl sm:text-4xl font-bold text-white mb-1">22+</div>
+              <div className="text-3xl sm:text-4xl font-bold text-white mb-1">50+</div>
               <div className="text-white/80 text-xs sm:text-sm font-medium">Events/Week</div>
             </div>
             <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 sm:p-6 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:-translate-y-1">
-              <div className="text-3xl sm:text-4xl font-bold text-white mb-1">8</div>
+              <div className="text-3xl sm:text-4xl font-bold text-white mb-1">10</div>
               <div className="text-white/80 text-xs sm:text-sm font-medium">Categories</div>
             </div>
             <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 sm:p-6 hover:bg-white/20 transition-all duration-300 hover:scale-105 hover:-translate-y-1">

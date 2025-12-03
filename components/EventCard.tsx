@@ -96,16 +96,16 @@ export function EventCard({ event }: { event: Event }) {
       {/* Modal */}
       {showModal && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-2 sm:p-4"
           onClick={() => setShowModal(false)}
         >
           <div
-            className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+            className="bg-white rounded-2xl max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex justify-between items-start">
-              <div className="flex-1 pr-4">
+            <div className="sticky top-0 bg-white border-b border-gray-200 p-4 sm:p-6 flex justify-between items-start">
+              <div className="flex-1 pr-2 sm:pr-4">
                 <span
                   className="inline-block px-3 py-1 text-xs font-semibold text-white rounded mb-3 cursor-default"
                   style={{ backgroundColor: categoryColors[event.category] || '#6B6B6B' }}
@@ -113,7 +113,7 @@ export function EventCard({ event }: { event: Event }) {
                 >
                   {event.category}
                 </span>
-                <h2 className="font-heading font-bold text-2xl text-primary-teal">
+                <h2 className="font-heading font-bold text-xl sm:text-2xl text-primary-teal">
                   {event.title}
                 </h2>
               </div>
@@ -122,20 +122,20 @@ export function EventCard({ event }: { event: Event }) {
                   e.stopPropagation();
                   setShowModal(false);
                 }}
-                className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0"
+                className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0 p-2 -mr-2 sm:mr-0 sm:p-0"
               >
                 <X size={24} />
               </button>
             </div>
 
             {/* Modal Content */}
-            <div className="p-6 space-y-6">
+            <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
               {/* Event Details */}
               <div className="space-y-3">
                 <div className="flex items-start gap-3 text-text-primary">
                   <Calendar size={20} className="text-primary-teal flex-shrink-0 mt-0.5" />
                   <div>
-                    <p className="font-semibold">
+                    <p className="font-semibold text-sm sm:text-base">
                       {new Date(event.date).toLocaleDateString('en-US', {
                         weekday: 'long',
                         month: 'long',
@@ -151,7 +151,7 @@ export function EventCard({ event }: { event: Event }) {
                   <div className="flex items-start gap-3 text-text-primary">
                     <MapPin size={20} className="text-primary-teal flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="font-semibold">{event.location}</p>
+                      <p className="font-semibold text-sm sm:text-base">{event.location}</p>
                       {event.address && <p className="text-sm text-text-secondary">{event.address}</p>}
                     </div>
                   </div>
@@ -160,7 +160,7 @@ export function EventCard({ event }: { event: Event }) {
                 {event.cost && (
                   <div className="flex items-start gap-3 text-text-primary">
                     <DollarSign size={20} className="text-primary-teal flex-shrink-0 mt-0.5" />
-                    <p className="font-semibold">{event.cost}</p>
+                    <p className="font-semibold text-sm sm:text-base">{event.cost}</p>
                   </div>
                 )}
               </div>
@@ -168,10 +168,10 @@ export function EventCard({ event }: { event: Event }) {
               {/* Description */}
               {event.description && (
                 <div>
-                  <h3 className="font-heading font-semibold text-lg text-primary-teal mb-2">
+                  <h3 className="font-heading font-semibold text-base sm:text-lg text-primary-teal mb-2">
                     About This Event
                   </h3>
-                  <p className="text-text-primary leading-relaxed whitespace-pre-line">
+                  <p className="text-text-primary text-sm sm:text-base leading-relaxed whitespace-pre-line">
                     {event.description}
                   </p>
                 </div>
@@ -187,14 +187,14 @@ export function EventCard({ event }: { event: Event }) {
               )}
 
               {/* Action Buttons */}
-              <div className="flex gap-3 pt-4">
+              <div className="flex flex-col sm:flex-row gap-3 pt-4">
                 {event.source_url && (
                   <a
                     href={event.source_url}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    className="flex-1 bg-primary-teal text-white px-6 py-3 rounded-xl font-semibold hover:bg-teal-light transition-colors flex items-center justify-center gap-2"
+                    className="flex-1 bg-primary-teal text-white px-6 py-4 sm:py-3 rounded-xl font-semibold hover:bg-teal-light transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
                   >
                     <ExternalLink size={18} />
                     Get Tickets / More Info
@@ -202,7 +202,7 @@ export function EventCard({ event }: { event: Event }) {
                 )}
                 <button
                   onClick={() => setShowModal(false)}
-                  className="px-6 py-3 rounded-xl font-semibold border-2 border-gray-300 text-text-primary hover:bg-gray-50 transition-colors"
+                  className="px-6 py-4 sm:py-3 rounded-xl font-semibold border-2 border-gray-300 text-text-primary hover:bg-gray-50 transition-colors text-sm sm:text-base"
                 >
                   Close
                 </button>
