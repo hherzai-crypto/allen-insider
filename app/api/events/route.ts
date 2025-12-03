@@ -51,14 +51,10 @@ export async function GET(request: NextRequest) {
     const now = Date.now();
     const cacheValid = cachedEvents && cacheTimestamp && (now - cacheTimestamp < CACHE_DURATION);
 
-    let scrapedEvents;
-    if (cacheValid) {
-      console.log('Using cached events (cache hit)');
-      scrapedEvents = cachedEvents!;
-    } else {
+    if (!cacheValid) {
       // Fallback: Scrape events directly
       console.log('Fetching events directly from scrapers...');
-      scrapedEvents = await scrapeAllEvents();
+      const scrapedEvents = await scrapeAllEvents();
 
       // Update cache
       cachedEvents = scrapedEvents.map((event, index) => ({
@@ -82,10 +78,12 @@ export async function GET(request: NextRequest) {
       }));
       cacheTimestamp = now;
       console.log(`Cached ${cachedEvents.length} events for 6 hours`);
+    } else {
+      console.log('Using cached events (cache hit)');
     }
 
     // Filter events based on query parameters
-    const events: Event[] = scrapedEvents
+    const events: Event[] = cachedEvents!
       .filter(event => {
         if (category && event.category !== category) return false;
         if (upcoming) {
