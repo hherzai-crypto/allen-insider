@@ -190,6 +190,11 @@ export function EventsGrid() {
 
   // Filter events by category
   useEffect(() => {
+    // Don't filter if events haven't loaded yet
+    if (events.length === 0) {
+      return;
+    }
+
     if (selectedCategory === 'All') {
       setFilteredEvents(events);
     } else if (selectedCategory === 'Featured') {
