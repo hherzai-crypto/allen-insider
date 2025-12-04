@@ -74,12 +74,12 @@ export function ChatWidget() {
       {/* Header */}
       <div className="bg-gradient-to-br from-primary-teal to-teal-light text-white p-4 flex justify-between items-center">
         <div>
-          <h3 className="font-heading font-semibold">Allen Insider Assistant</h3>
-          <p className="text-secondary-gold text-sm">Ask me about events!</p>
+          <h3 className="font-heading font-semibold text-white">Allen Insider Assistant</h3>
+          <p className="text-white text-sm">Ask me about events!</p>
         </div>
         <button
           onClick={() => setIsOpen(false)}
-          className="hover:bg-white/20 p-1 rounded transition-colors"
+          className="hover:bg-white/20 p-1 rounded transition-colors text-white"
         >
           <X size={20} />
         </button>

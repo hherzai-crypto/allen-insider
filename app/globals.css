@@ -3,14 +3,60 @@
 @import "tailwindcss";
 
 :root {
-  --background: #F8F8F6;
-  --foreground: #2D2D2D;
-  --primary-teal: #006B6B;
-  --secondary-gold: #D4AF37;
-  --teal-light: #008B8B;
-  --text-primary: #2D2D2D;
-  --text-secondary: #6B6B6B;
-  --bg-offwhite: #F8F8F6;
+  /* Lime */
+  --lime-100: #eaf2d9;
+  --lime-200: #8db640;
+  --lime-300: #8db63f;
+  --lime-400: #618c00;
+  --lime-500: #608c00;
+  --lime-600: #537b00;
+  --lime-700: #4e7000;
+
+  /* Gray */
+  --gray-100: #ffffff;
+  --gray-200: #f7f7f7;
+  --gray-300: #f2f2f2;
+  --gray-400: #eef2f5;
+  --gray-500: #e2e2e2;
+  --gray-600: #dfe0e2;
+  --gray-700: #cccccc;
+  --gray-800: #b9bec1;
+  --gray-900: #989898;
+  --gray-1000: #949494;
+  --gray-1100: #808080;
+  --gray-1200: #737373;
+  --gray-1300: #707070;
+  --gray-1400: #515151;
+  --gray-1500: #3c3c3c;
+  --gray-1600: #32373c;
+  --gray-1700: #2a2a2a;
+  --gray-1800: #292929;
+  --gray-1900: #202928;
+  --gray-2000: #000000;
+
+  /* Blue */
+  --blue-100: #e9f2fa;
+  --blue-200: #617f9e;
+  --blue-300: #359dff;
+  --blue-400: #5e7d9c;
+  --blue-500: #408bd1;
+
+  /* Khaki */
+  --khaki-100: #eee7d9;
+  --khaki-200: #c6c0b4;
+
+  /* Yellow */
+  --yellow-100: #5f5f4d;
+
+  /* App-level color mappings */
+  --background: var(--gray-100);
+  --foreground: var(--gray-1700);
+  --primary-teal: var(--lime-500);
+  --secondary-gold: var(--lime-200);
+  --teal-light: var(--lime-300);
+  --text-primary: var(--gray-1700);
+  --text-secondary: var(--gray-1100);
+  --bg-offwhite: var(--gray-200);
 }
 
 @theme inline {
