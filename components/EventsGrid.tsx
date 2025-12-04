@@ -233,19 +233,19 @@ export function EventsGrid() {
           </p>
         </div>
 
-        {/* Category filters with modern design */}
-        <div className="mb-12 -mx-4 sm:mx-0">
-          <div className="overflow-x-auto px-4 sm:px-0 scrollbar-hide">
-            <div className="flex sm:flex-wrap gap-3 sm:justify-center min-w-max sm:min-w-0">
+        {/* Category filters - Instagram Stories style */}
+        <div className="mb-12">
+          <div className="overflow-x-auto overflow-y-hidden scrollbar-hide -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div className="flex gap-4 sm:gap-3 pb-2 sm:flex-wrap sm:justify-center">
               {['Featured', 'All', 'Music', 'Food', 'Family', 'Sports', 'Arts', 'Fitness', 'Shopping', 'Entertainment', 'Community', 'Education'].map(
                 (category) => (
                   <button
                     key={category}
                     onClick={() => setSelectedCategory(category)}
-                    className={`px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 whitespace-nowrap ${
+                    className={`flex-shrink-0 px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 whitespace-nowrap ${
                       category === selectedCategory
-                        ? 'bg-gradient-to-r from-primary-teal to-teal-light text-white shadow-lg shadow-primary-teal/30 scale-105'
-                        : 'bg-white text-text-secondary border-2 border-gray-200 hover:border-primary-teal hover:text-primary-teal hover:-translate-y-0.5 hover:shadow-md'
+                        ? 'bg-gradient-to-r from-primary-teal to-teal-light text-white shadow-lg scale-105'
+                        : 'bg-white text-text-secondary border border-gray-300 hover:border-primary-teal hover:scale-105 active:scale-95'
                     }`}
                   >
                     {category}

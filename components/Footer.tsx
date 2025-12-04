@@ -79,7 +79,7 @@ export function Footer() {
             © 2026 Allen Insider. Made with love in Allen, TX.
           </p>
           <p className="text-gray-500 text-sm">
-            A community project by{' '}
+            Allen Insider, in partnership with{' '}
             <span className="text-secondary-gold">4Ever Young</span>
           </p>
         </div>

@@ -38,17 +38,26 @@ export default function Home() {
                 {/* Text Content */}
                 <div className="flex-1 text-text-secondary text-lg leading-relaxed space-y-4">
                   <p>
-                    I&apos;m <span className="font-semibold text-text-primary">Hamid Harzai</span> — proud father of three amazing kids and husband to a beautiful wife. We&apos;ve called Allen, Texas home for years now, and like most parents in this community, I got tired of hunting across Facebook groups, school emails, and city websites just to find weekend plans.
+                    I&apos;m <span className="font-semibold text-text-primary">Hamid Harzai</span>, husband to a beautiful wife and father to three amazing kids. We&apos;ve called Allen home for years. Like any busy parent here, I grew tired of the scavenger hunt across different websites and social feeds just to find weekend plans.
                   </p>
                   <p>
-                    So I built Allen Insider.
+                    So, I built Allen Insider.
                   </p>
                   <p>
-                    Every Thursday at 4 PM, get a curated list of the best local events — farmers markets, live music, family activities, and hidden gems in our growing city. One email. No scavenger hunt.
+                    It&apos;s your weekly, curated guide to 50+ local events—delivered free every Thursday at 4 PM. One email. More time back with your family.
+                  </p>
+                  <p className="font-semibold text-text-primary text-xl mt-6">
+                    Our Mission & Sponsorship
                   </p>
                   <p>
-                    This is a passion project — wellness and community matter deeply to us. We&apos;re also excited to be opening{' '}
-                    <span className="font-semibold text-secondary-gold">4Ever Young Anti-Aging & Wellness Clinic</span> at Custer & 121 in mid-2026. We believe in building community before building business.
+                    We curate the best of Allen because we believe every resident deserves the energy and vitality to experience it all.
+                  </p>
+                  <p>
+                    Allen Insider is proudly sponsored by{' '}
+                    <span className="font-semibold text-secondary-gold">4Ever Young Anti Aging Solutions</span>.
+                  </p>
+                  <p>
+                    Our mission is the same: Help you look and feel your best so you can fully enjoy this incredible community. We are excited to open the clinic at Custer & 121 in mid-2026. We are building a community. This mission is supported by the upcoming 4Ever Young Anti-Aging & Wellness Clinic.
                   </p>
                   <p className="pt-4">
                     Thanks for being here.<br />
