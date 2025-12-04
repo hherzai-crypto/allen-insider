@@ -7,8 +7,52 @@ import { SubscribeForm } from '@/components/SubscribeForm';
 import Image from 'next/image';
 
 export default function Home() {
+  // Structured data for SEO
+  const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Allen Insider',
+    description: 'Your weekly guide to the best events in Allen, TX',
+    url: 'https://allen-insider.com',
+    logo: 'https://allen-insider.com/logo.png',
+    email: 'hamid@allen-insider.com',
+    founder: {
+      '@type': 'Person',
+      name: 'Hamid Harzai',
+    },
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Allen',
+      addressRegion: 'TX',
+      addressCountry: 'US',
+    },
+    sameAs: [],
+  };
+
+  const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Allen Insider',
+    url: 'https://allen-insider.com',
+    description: 'Never miss what\'s happening in Allen, TX. Get the best local events delivered to your inbox every Thursday.',
+    publisher: {
+      '@type': 'Organization',
+      name: 'Allen Insider',
+    },
+  };
+
   return (
     <div className="min-h-screen">
+      {/* Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
+
       <Header />
       <main>
         <Hero />

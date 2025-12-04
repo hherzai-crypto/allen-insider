@@ -8,7 +8,7 @@ export async function sendWelcomeEmail(
 ) {
   const msg = {
     to: email,
-    from: 'hello@allen-insider.com',
+    from: 'hamid@allen-insider.com',
     subject: 'Confirm your Allen Insider subscription',
     html: `
       <div style="font-family: Inter, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -74,7 +74,7 @@ export async function sendNewsletter(
 
     return {
       to: sub.email,
-      from: 'hello@allen-insider.com',
+      from: 'hamid@allen-insider.com',
       subject,
       html: `
         ${htmlContent}

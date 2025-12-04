@@ -63,10 +63,10 @@ export function Footer() {
             <ul className="space-y-2 text-gray-400">
               <li>
                 <a
-                  href="mailto:hello@allen-insider.com"
+                  href="mailto:hamid@allen-insider.com"
                   className="hover:text-white transition-colors"
                 >
-                  hello@allen-insider.com
+                  hamid@allen-insider.com
                 </a>
               </li>
               <li>Allen, TX</li>

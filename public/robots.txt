@@ -1,0 +1,9 @@
+# Allow all search engines to index the site
+User-agent: *
+Allow: /
+
+# Disallow admin and API routes
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://allen-insider.com/sitemap.xml
