@@ -57,7 +57,7 @@ export default function Home() {
                     <span className="font-semibold text-secondary-gold">4Ever Young Anti Aging Solutions</span>.
                   </p>
                   <p>
-                    Our mission is the same: Help you look and feel your best so you can fully enjoy this incredible community. We are excited to open the clinic at Custer & 121 in mid-2026. We are building a community. This mission is supported by the upcoming 4Ever Young Anti-Aging & Wellness Clinic.
+                    Our mission is the same: Help you look and feel your best so you can fully enjoy this incredible community. We are excited to open the clinic at Custer & 121 in mid-2026.
                   </p>
                   <p className="pt-4">
                     Thanks for being here.<br />
