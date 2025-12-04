@@ -72,16 +72,17 @@ export function ChatWidget() {
   return (
     <div className="fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 sm:w-96 h-[600px] max-h-[calc(100vh-2rem)] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50">
       {/* Header */}
-      <div className="bg-gradient-to-br from-primary-teal to-teal-light text-white p-4 flex justify-between items-center">
-        <div>
-          <h3 className="font-heading font-semibold text-white">Allen Insider Assistant</h3>
-          <p className="text-white text-sm">Ask me about events!</p>
+      <div className="bg-gradient-to-br from-primary-teal to-teal-light text-white p-3 sm:p-4 flex justify-between items-center gap-3">
+        <div className="flex-1 min-w-0">
+          <h3 className="font-heading font-semibold text-white text-sm sm:text-base">Allen Insider Assistant</h3>
+          <p className="text-white text-xs sm:text-sm">Ask me about events!</p>
         </div>
         <button
           onClick={() => setIsOpen(false)}
-          className="hover:bg-white/20 p-1 rounded transition-colors text-white"
+          className="flex-shrink-0 hover:bg-white/20 p-2 sm:p-2.5 rounded-full transition-colors text-white touch-manipulation"
+          aria-label="Close chat"
         >
-          <X size={20} />
+          <X size={20} className="sm:w-5 sm:h-5" />
         </button>
       </div>
 

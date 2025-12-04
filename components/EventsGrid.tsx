@@ -244,8 +244,8 @@ export function EventsGrid() {
                     onClick={() => setSelectedCategory(category)}
                     className={`flex-shrink-0 px-6 py-3 rounded-full text-sm font-bold transition-all duration-300 whitespace-nowrap ${
                       category === selectedCategory
-                        ? 'bg-gradient-to-r from-primary-teal to-teal-light text-white shadow-lg scale-105'
-                        : 'bg-white text-text-secondary border border-gray-300 hover:border-primary-teal hover:scale-105 active:scale-95'
+                        ? 'bg-gradient-to-r from-primary-teal to-teal-light text-white shadow-xl ring-4 ring-primary-teal/30 scale-105'
+                        : 'bg-white text-text-secondary border-2 border-gray-300 hover:border-primary-teal hover:ring-2 hover:ring-primary-teal/20 hover:scale-105 active:scale-95 shadow-sm'
                     }`}
                   >
                     {category}
