@@ -68,10 +68,16 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(
       new URL('/verified?success=true', request.url)
     );
-  } catch (error) {
-    console.error('Verification error:', error);
+  } catch (error: any) {
+    console.error('Verification error:', {
+      message: error?.message,
+      code: error?.code,
+      details: error?.details,
+      hint: error?.hint,
+      stack: error?.stack
+    });
     return NextResponse.json(
-      { success: false, message: 'Verification failed' },
+      { success: false, message: 'Verification failed', error: error?.message },
       { status: 500 }
     );
   }
